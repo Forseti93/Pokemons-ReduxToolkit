@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/Pokemons-ReduxToolkit/static/css/main.a7a9531c.css",
-    "main.js": "/Pokemons-ReduxToolkit/static/js/main.6ee097e1.js",
+    "main.js": "/Pokemons-ReduxToolkit/static/js/main.2ed9a18e.js",
     "index.html": "/Pokemons-ReduxToolkit/index.html",
     "main.a7a9531c.css.map": "/Pokemons-ReduxToolkit/static/css/main.a7a9531c.css.map",
-    "main.6ee097e1.js.map": "/Pokemons-ReduxToolkit/static/js/main.6ee097e1.js.map"
+    "main.2ed9a18e.js.map": "/Pokemons-ReduxToolkit/static/js/main.2ed9a18e.js.map"
   },
   "entrypoints": [
     "static/css/main.a7a9531c.css",
-    "static/js/main.6ee097e1.js"
+    "static/js/main.2ed9a18e.js"
   ]
 }
