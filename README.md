@@ -8,5 +8,5 @@ react - redux checklist.
 6) to take data from redux store - useSelector
 7) to change store make a dispatch - useDispatch
 
-* Based on the Redux quickstart guide
-** "target": "es2015",
+* Based on the Redux quickstart guide <br>
+* "target": "es2015",
