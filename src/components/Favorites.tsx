@@ -29,8 +29,8 @@ export const Favorites = () => {
       >
         {favPokemons.map((pokemon, id) => {
           return (
-            <Box>
-              <Card sx={{ maxWidth: 345 }} variant="outlined" key={id}>
+            <Box key={id}>
+              <Card sx={{ maxWidth: 345 }} variant="outlined">
                 <CardContent>
                   <Typography
                     sx={{ fontSize: 26 }}
@@ -43,9 +43,7 @@ export const Favorites = () => {
                   <CardMedia
                     component="img"
                     height="30%"
-                    image={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${
-                      +pokemon.id + 1
-                    }.svg`}
+                    image={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`}
                     alt={pokemon.name}
                   />
                   <Box display="flex" justifyContent="space-between" gap="16px">

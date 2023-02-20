@@ -8,9 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
-import { Container } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -23,7 +21,7 @@ export interface IPokemonState {
 
 export default function Pokemon() {
   const [pokeNames, setPokeNames] = useState<string[]>([]);
-  const [pokeData, setPokeData] = useState<string[]>([]);
+  const [pokeData, setPokeData] = useState<any[]>([]);
 
   const { activePokemon, favPokemons }: IPokemonState = useSelector(
     (state: any) => state.pokemons
@@ -37,7 +35,24 @@ export default function Pokemon() {
         return response.json();
       })
       .then((data) => {
-        setPokeData(data.results);
+        // img example
+        // https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/848.png
+        const idArray = data.results.map((el: any) => {
+          const url = el.url;
+          const regEx = /\d+(?!.*\d)/gm;
+          const id = url.match(regEx);
+          return id[0];
+        });
+
+        console.log(pokeData);
+        setPokeData((prev) => {
+          return data.results.map((elem: any, ind: number) => {
+            return {
+              ...elem,
+              id: idArray[ind] as string,
+            };
+          });
+        });
         setPokeNames(
           data.results.map((pokemon: any) => {
             return pokemon.name;
@@ -49,17 +64,19 @@ export default function Pokemon() {
   // load IPokemon data
   const loadPokemonData = async (index: number): Promise<IPokemon> => {
     let stats: any;
-    await fetch(`https://pokeapi.co/api/v2/pokemon/${+index + 1}`)
+    await fetch(`https://pokeapi.co/api/v2/pokemon/${index}`)
       .then((res) => {
         return res.json();
       })
       .then((data) => {
+        console.log(data);
+
         stats = data.stats;
       });
 
     return {
-      id: activePokemon as number,
-      name: pokeNames[activePokemon as number],
+      id: index as number,
+      name: pokeNames[index-1 as number],
       hp: stats.find((obj: any) => obj.stat.name === "hp").base_stat as number,
       attack: stats.find((obj: any) => obj.stat.name === "attack")
         .base_stat as number,
@@ -82,9 +99,20 @@ export default function Pokemon() {
           renderInput={(params) => (
             <TextField {...params} label="Pokemon's name" />
           )}
-          onChange={(e: any) =>
-            dispatch(setActivePokemon(e.target.dataset.optionIndex))
-          }
+          onChange={(e: any) => {
+            console.log(e);
+
+            dispatch(
+              setActivePokemon(
+                pokeData.find((el) => {
+                  if (el.name === e.target.childNodes[0].data) {
+                    console.log(el);
+                    return el.name === e.target.childNodes[0].data;
+                  }
+                }).id
+              )
+            );
+          }}
         />
         <Button
           variant="outlined"
@@ -109,15 +137,13 @@ export default function Pokemon() {
               textTransform="capitalize"
               fontWeight="bolder"
             >
-              {pokeNames[activePokemon]}
+              {pokeNames[activePokemon-1]}
             </Typography>
             <CardMedia
               component="img"
               height="30%"
-              image={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${
-                +activePokemon + 1
-              }.svg`}
-              alt={pokeNames[activePokemon]}
+              image={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${activePokemon}.png`}
+              alt={pokeNames[activePokemon-1]}
             />
           </CardContent>
         </Card>
