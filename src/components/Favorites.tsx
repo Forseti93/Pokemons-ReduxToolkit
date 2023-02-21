@@ -26,6 +26,9 @@ export const Favorites = () => {
         alignItems="center"
         justifyContent="center"
         gap="25px"
+        sx={{
+          padding: "16px",
+        }}
       >
         {favPokemons.map((pokemon, id) => {
           return (

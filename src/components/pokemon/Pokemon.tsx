@@ -44,7 +44,6 @@ export default function Pokemon() {
           return id[0];
         });
 
-        console.log(pokeData);
         setPokeData((prev) => {
           return data.results.map((elem: any, ind: number) => {
             return {
@@ -63,33 +62,50 @@ export default function Pokemon() {
 
   // load IPokemon data
   const loadPokemonData = async (index: number): Promise<IPokemon> => {
-    let stats: any;
-    await fetch(`https://pokeapi.co/api/v2/pokemon/${index}`)
+    const stats = await fetch(`https://pokeapi.co/api/v2/pokemon/${index}`)
       .then((res) => {
         return res.json();
       })
       .then((data) => {
-        console.log(data);
-
-        stats = data.stats;
+        return data.stats;
       });
 
     return {
       id: index as number,
-      name: pokeNames[index-1 as number],
+      name: pokeNames[(index - 1) as number],
       hp: stats.find((obj: any) => obj.stat.name === "hp").base_stat as number,
       attack: stats.find((obj: any) => obj.stat.name === "attack")
         .base_stat as number,
     };
   };
 
+  // React.SyntheticEvent, value: string, reason: string
+  const handleInputChange = (
+    event: React.SyntheticEvent<Element, Event>,
+    value: string
+  ) => {
+    // const value = event.target.value
+    dispatch(
+      setActivePokemon(
+        pokeData.find((el) => {
+          if (el.name === value) {
+            return el.name === value;
+          }
+        })?.id
+      )
+    );
+  };
   return (
     <Box display="flex" flexDirection="column" alignItems="center" gap="25px">
       <Stack
         flexDirection="row"
+        flexWrap="wrap"
         alignItems="center"
         justifyContent="center"
         gap="15px"
+        sx={{
+          padding: "16px",
+        }}
       >
         <Autocomplete
           disablePortal
@@ -99,20 +115,7 @@ export default function Pokemon() {
           renderInput={(params) => (
             <TextField {...params} label="Pokemon's name" />
           )}
-          onChange={(e: any) => {
-            console.log(e);
-
-            dispatch(
-              setActivePokemon(
-                pokeData.find((el) => {
-                  if (el.name === e.target.childNodes[0].data) {
-                    console.log(el);
-                    return el.name === e.target.childNodes[0].data;
-                  }
-                }).id
-              )
-            );
-          }}
+          onInputChange={handleInputChange}
         />
         <Button
           variant="outlined"
@@ -137,13 +140,13 @@ export default function Pokemon() {
               textTransform="capitalize"
               fontWeight="bolder"
             >
-              {pokeNames[activePokemon-1]}
+              {pokeNames[activePokemon - 1]}
             </Typography>
             <CardMedia
               component="img"
               height="30%"
               image={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${activePokemon}.png`}
-              alt={pokeNames[activePokemon-1]}
+              alt={pokeNames[activePokemon - 1]}
             />
           </CardContent>
         </Card>
